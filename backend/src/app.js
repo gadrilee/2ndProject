@@ -1,5 +1,8 @@
+require('dotenv').config();
 const express = require("express");
 const cors = require("cors");
+const database = require("./data/database");
+
 class Server {
     constructor() {
         this.app = express();
@@ -14,6 +17,9 @@ class Server {
 
     async start() {
         try {
+            await database.syncDatabase();
+            console.log("Base de datos SQLite sincronizada exitosamente.");
+            
             this.app.listen(this.port, () => {
                 console.log(
                     `Servidor activo en: http://localhost:${this.port}`,
@@ -21,7 +27,7 @@ class Server {
             });
         } catch (error) {
             console.error(
-                "Error al inicializar el servidor:",
+                "Error al inicializar  la base de datos o el servidor:",
                 error,
             );
         }
