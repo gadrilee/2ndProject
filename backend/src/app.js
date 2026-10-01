@@ -1,13 +1,15 @@
-require('dotenv').config();
+require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
 const database = require("./data/database");
-
+const authRoutes = require("./presentation/routes/auth.routes");
 class Server {
     constructor() {
         this.app = express();
         this.port = process.env.PORT || 3000;
         this.middlewares();
+        this.routes();
     }
 
     middlewares() {
@@ -15,11 +17,15 @@ class Server {
         this.app.use(express.json());
     }
 
+    routes() {
+        this.app.use("/api", authRoutes);
+    }
+
     async start() {
         try {
             await database.syncDatabase();
             console.log("Base de datos SQLite sincronizada exitosamente.");
-            
+
             this.app.listen(this.port, () => {
                 console.log(
                     `Servidor activo en: http://localhost:${this.port}`,

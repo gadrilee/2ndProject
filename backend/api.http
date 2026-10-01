@@ -1,0 +1,82 @@
+### Variables Globales
+@baseUrl = http://localhost:3001/api
+@authToken = {{login.response.body.token}}
+@resetToken = {{forgotPassword.response.body.simulatedResetToken}}
+
+### 1. Registrar un nuevo usuario
+# @name register
+POST {{baseUrl}}/register
+Content-Type: application/json
+
+{
+  "name": "Diego Estero",
+  "email": "estero@truequeu.com",
+  "password": "Password123!"
+}
+
+###
+
+### 2. Iniciar sesión (Captura el JWT automáticamente)
+# @name login
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "estero@truequeu.com",
+  "password": "Password123!"
+}
+
+###
+
+### 3. Ruta pública (Accesible sin token)
+GET {{baseUrl}}/public-info
+
+###
+
+### 4. Ruta privada protegida (Usa el token guardado del login)
+GET {{baseUrl}}/profile
+Authorization: Bearer {{authToken}}
+
+###
+
+### 5. Intentar acceder a la ruta privada sin token (Debe responder 401)
+GET {{baseUrl}}/profile
+
+###
+
+### 6. Solicitar recuperación de contraseña
+# @name forgotPassword
+POST {{baseUrl}}/forgot-password
+Content-Type: application/json
+
+{
+  "email": "estero@truequeu.com"
+}
+
+###
+
+### 7. Cambiar la contraseña con el token generado
+POST {{baseUrl}}/reset-password
+Content-Type: application/json
+
+{
+  "resetToken": "{{resetToken}}",
+  "newPassword": "NuevaPassword456!"
+}
+
+###
+
+### 8. Probar login con la nueva contraseña
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "estero@truequeu.com",
+  "password": "NuevaPassword456!"
+}
+
+###
+
+### 9. Cerrar sesión
+POST {{baseUrl}}/logout
+Content-Type: application/json
