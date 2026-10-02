@@ -4,6 +4,7 @@ const express = require("express");
 const cors = require("cors");
 const database = require("./data/database");
 const authRoutes = require("./presentation/routes/auth.routes");
+const postRoutes = require("./presentation/routes/post.routes");
 class Server {
     constructor() {
         this.app = express();
@@ -18,7 +19,7 @@ class Server {
     }
 
     routes() {
-        this.app.use("/api", authRoutes);
+        this.app.use("/api", [authRoutes, postRoutes]);
     }
 
     async start() {

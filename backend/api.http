@@ -80,3 +80,32 @@ Content-Type: application/json
 ### 9. Cerrar sesión
 POST {{baseUrl}}/logout
 Content-Type: application/json
+
+###
+
+### 10. Crear una publicación
+# @name createPost
+POST {{baseUrl}}/create
+Content-Type: application/json
+
+{
+  "title": "Libro de Cálculo I",
+  "type": "trueque",
+  "state": "usado"
+}
+
+###
+
+### 11. Crear publicación sin campos obligatorios (Debe responder 400)
+POST {{baseUrl}}/create
+Content-Type: application/json
+
+{
+  "title": "Sin tipo ni estado"
+}
+
+###
+
+### 12. Obtener todas las publicaciones
+POST {{baseUrl}}/getall
+Content-Type: application/json
