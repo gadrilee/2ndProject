@@ -2,43 +2,24 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trueque U - Crear Cuenta</title>
+    <title>Trueque U - Registro</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="glass-container">
-        <div class="logo-container">
-            <img src="logoSinFondo.png" alt="Trueque U Logo" class="logo">
-        </div>
-        <h2>Crear Cuenta</h2>
-        <p class="subtitle">Únete a la plataforma de intercambio de tu universidad</p>
-        
-        <form id="registerForm">
-            <div id="errorMessage" class="error-message"></div>
-            
-            <div class="input-box">
-                <input type="text" id="name" placeholder="Nombre completo" required>
-                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-            </div>
+    <h1>Trueque U</h1>
+    <h2>Registro</h2>
+    
+    <form id="registerForm">
+        <div id="errorMessage" class="error-message"></div>
+        <p>Nombre completo:<br> <input type="text" id="name" required></p>
+        <p>Correo electrónico:<br> <input type="email" id="email" required></p>
+        <p>Contraseña:<br> <input type="password" id="password" required></p>
+        <p><button type="submit">Crear cuenta</button></p>
+    </form>
+    
+    <hr>
+    <p>¿Ya tienes una cuenta? <a href="index.html">Inicia sesión</a></p>
 
-            <div class="input-box">
-                <input type="email" id="email" placeholder="Correo electrónico" required>
-                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-            </div>
-            
-            <div class="input-box">
-                <input type="password" id="password" placeholder="Contraseña" required>
-                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-            </div>
-            
-            <button type="submit" class="btn btn-login">Registrarse</button>
-        </form>
-
-        <div class="signup-link">
-            <p>¿Ya tienes una cuenta? <a href="index.html">Inicia sesión</a></p>
-        </div>
-    </div>
     <script type="module" src="js/register.js"></script>
 </body>
 </html>

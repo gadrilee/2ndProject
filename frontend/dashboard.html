@@ -2,20 +2,58 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trueque U - Dashboard</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="glass-container dashboard-glass">
-        <div class="logo-container">
-            <img src="logoSinFondo.png" alt="Trueque U Logo" class="logo">
-        </div>
-        <h1 class="dashboard-title">Trueque U</h1>
-        <p class="dashboard-desc">Bienvenido a la plataforma de intercambio de objetos de tu universidad.</p>
-        
-        <button id="logoutBtn" class="btn btn-danger btn-logout">Logout</button>
-    </div>
+    <h1>Trueque U</h1>
+    <p>Bienvenido a la plataforma de intercambio de objetos de tu universidad</p>
+    <p><button id="logoutBtn">Cerrar Sesión</button></p>
+    <hr>
+    
+    <table width="100%" cellpadding="10">
+        <tr>
+            <td width="30%" valign="top">
+                <h2>Publicar Objeto</h2>
+                <form id="itemForm">
+                    <p>Nombre:<br>
+                    <input type="text" id="itemName" required></p>
+                    
+                    <p>Tipo:<br>
+                    <input type="text" id="itemType" required></p>
+                    
+                    <p>Estado:<br>
+                    <select id="itemStatus" required>
+                        <option value="Nuevo">Nuevo</option>
+                        <option value="Usado">Usado</option>
+                        <option value="Para reparar">Para reparar</option>
+                    </select></p>
+                    
+                    <p>
+                    <input type="checkbox" id="itemAvailable"> Disponible
+                    </p>
+                    
+                    <p><button type="submit">Agregar a la lista</button></p>
+                </form>
+            </td>
+            <td width="70%" valign="top">
+                <h2>Mis Objetos</h2>
+                <table border="1" width="100%" cellpadding="5" cellspacing="0">
+                    <thead>
+                        <tr bgcolor="#eeeeee">
+                            <th>Nombre</th>
+                            <th>Tipo</th>
+                            <th>Estado</th>
+                            <th>Disponible</th>
+                        </tr>
+                    </thead>
+                    <tbody id="itemsTableBody">
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </table>
+    
     <script type="module" src="js/dashboard.js"></script>
 </body>
 </html>
