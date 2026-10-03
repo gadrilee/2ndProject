@@ -1,0 +1,37 @@
+const { Model, DataTypes } = require("sequelize");
+const sequelize = require("../database/db");
+
+class Post extends Model {}
+
+Post.init(
+    {
+        id: {
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
+            primaryKey: true,
+        },
+        title: { 
+            type: DataTypes.STRING, 
+            allowNull: false },
+        type: { 
+            type: DataTypes.TEXT, 
+            allowNull: false 
+        },
+        state: { 
+            type: DataTypes.TEXT, 
+            allowNull: false 
+        },
+        publishedAt: {
+            type: DataTypes.DATE,
+            allowNull: false,
+            defaultValue: DataTypes.NOW,
+        },
+    },
+    { 
+        sequelize, 
+        modelName: "Post", 
+        tableName: "posts", 
+        timestamps: true },
+);
+
+module.exports = Post;
