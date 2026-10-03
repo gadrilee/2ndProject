@@ -1,45 +1,29 @@
-require("dotenv").config();
-
 const express = require("express");
 const cors = require("cors");
-const database = require("./data/database");
-const authRoutes = require("./presentation/routes/auth.routes");
-const postRoutes = require("./presentation/routes/post.routes");
-class Server {
-    constructor() {
-        this.app = express();
-        this.port = process.env.PORT || 3000;
-        this.middlewares();
-        this.routes();
-    }
+const { port } = require("./database/config");
+const { sequelize } = require("./models");
+const { errorHandler } = require("./middleware/errorHandler");
 
-    middlewares() {
-        this.app.use(cors());
-        this.app.use(express.json());
-    }
+const app = express();
 
-    routes() {
-        this.app.use("/api", [authRoutes, postRoutes]);
-    }
+app.use(cors());
+app.use(express.json());
 
-    async start() {
-        try {
-            await database.syncDatabase();
-            console.log("Base de datos SQLite sincronizada exitosamente.");
+app.use("/api", require("./routes/auth.routes"));
+app.use("/api", require("./routes/post.routes"));
 
-            this.app.listen(this.port, () => {
-                console.log(
-                    `Servidor activo en: http://localhost:${this.port}`,
-                );
-            });
-        } catch (error) {
-            console.error(
-                "Error al inicializar  la base de datos o el servidor:",
-                error,
-            );
-        }
+app.use(errorHandler);
+
+async function start() {
+    try {
+        await sequelize.sync({ alter: true });
+        console.log("Base de datos SQLite sincronizada exitosamente");
+        app.listen(port, () => {
+            console.log(`Servidor activo en: http://localhost:${port}`);
+        });
+    } catch (error) {
+        console.error("Error al inicializar la base de datos o el servidor:", error);
     }
 }
 
-const server = new Server();
-server.start();
+start();

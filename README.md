@@ -22,6 +22,18 @@ Segundo Proyecto de IHC
 
 El cliente REST para hacer las peticiones al backend está en `backend/api.http`
 
+### Estructura del backend
+
+```
+backend/src/
+  app.js         # Express, middlewares, rutas y arranque
+  database/      # Configuración, conexión SQLite y seed
+  models/        # Modelos y relaciones(index.js)
+  controllers/   # Lógica de cada endpoint
+  routes/        # Definición de rutas
+  middleware/    # verifyToken y manejo central de errores
+```
+
 
 
 ## Instrucciones para ejecutar el frontend
