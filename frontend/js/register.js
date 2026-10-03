@@ -1,6 +1,11 @@
 import { api } from './api.js';
 
 document.addEventListener('DOMContentLoaded', () => {
+    if (localStorage.getItem('token')) {
+        window.location.href = 'dashboard.html';
+        return;
+    }
+
     const registerForm = document.getElementById('registerForm');
     const nameInput = document.getElementById('name');
     const emailInput = document.getElementById('email');
@@ -20,21 +25,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            const btn = registerForm.querySelector('.btn-login');
+            const btn = registerForm.querySelector('button[type="submit"]');
             btn.disabled = true;
             btn.textContent = 'Registrando...';
 
             await api.register(name, email, password);
             
-            alert('Cuenta creada exitosamente. Ahora puedes iniciar sesión.');
+            alert('Cuenta creada exitosamente. Ahora puedes iniciar sesion');
             window.location.href = 'index.html';
 
         } catch (error) {
             showError(error.message);
         } finally {
-            const btn = registerForm.querySelector('.btn-login');
+            const btn = registerForm.querySelector('button[type="submit"]');
             btn.disabled = false;
-            btn.textContent = 'Registrarse';
+            btn.textContent = 'Crear cuenta';
         }
     });
 

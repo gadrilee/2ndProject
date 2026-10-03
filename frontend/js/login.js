@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            const btn = loginForm.querySelector('.btn-login');
+            const btn = loginForm.querySelector('button[type="submit"]');
             btn.disabled = true;
             btn.textContent = 'Cargando...';
 
@@ -36,9 +36,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             showError(error.message);
         } finally {
-            const btn = loginForm.querySelector('.btn-login');
+            const btn = loginForm.querySelector('button[type="submit"]');
             btn.disabled = false;
-            btn.textContent = 'Login';
+            btn.textContent = 'Entrar';
         }
     });
 
