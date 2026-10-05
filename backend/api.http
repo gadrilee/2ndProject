@@ -87,7 +87,7 @@ Content-Type: application/json
 # @name createPost
 POST {{baseUrl}}/posts
 Content-Type: application/json
-Authorization: Bearer {{authToken}}
+Authorization: Bearer {{rToken}}
 
 {
   "title": "Libro de Cálculo I",
