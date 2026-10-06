@@ -28,7 +28,7 @@ export const usePostsStore = defineStore("posts", () => {
             const data = await res.json();
             if (!res.ok) {
                 throw new Error(
-                    data.message || "Error al cargar publicaciones",
+                    data.message || data.error || "Error al cargar publicaciones",
                 );
             }
             posts.value = data.posts || [];
@@ -50,7 +50,7 @@ export const usePostsStore = defineStore("posts", () => {
         const data = await res.json();
         if (!res.ok) {
             throw new Error(
-                data.message || "Error al registrar la publicación",
+                data.message || data.error || "Error al registrar la publicación",
             );
         }
 
@@ -70,7 +70,7 @@ export const usePostsStore = defineStore("posts", () => {
         const data = await res.json();
         if (!res.ok) {
             throw new Error(
-                data.message || "Error al actualizar la publicación",
+                data.message || data.error || "Error al actualizar la publicación",
             );
         }
 
@@ -89,7 +89,7 @@ export const usePostsStore = defineStore("posts", () => {
 
         if (!res.ok) {
             const data = await res.json().catch(() => ({}));
-            throw new Error(data.message || "Error al eliminar la publicación");
+            throw new Error(data.message || data.error || "Error al eliminar la publicación");
         }
 
         posts.value = posts.value.filter((p) => p.id !== id);

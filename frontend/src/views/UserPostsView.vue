@@ -2,6 +2,7 @@
 import { ref, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { usePostsStore } from "@/stores/posts";
+import { useAuthStore } from "@/stores/auth";
 
 import PageTitle from "@/components/PageTitle.vue";
 import DataTable from "@/components/DataTable.vue";
@@ -9,6 +10,7 @@ import Modal from "@/components/Modal.vue";
 import StateBadge from "@/components/StateBadge.vue";
 import PostForm from "@/components/PostForm.vue";
 
+const authStore = useAuthStore();
 const postsStore = usePostsStore();
 const { posts, loading, error } = storeToRefs(postsStore);
 
@@ -72,7 +74,7 @@ onMounted(() => {
                     <StateBadge :state="post.state" />
                 </td>
                 <td class="text-center">
-                    <div class="inline-flex gap-2">
+                    <div v-if="!post.userId || post.userId === authStore.user?.id" class="inline-flex gap-2">
                         <button @click="openEditModal(post)" class="btn btn-square btn-ghost btn-sm text-info"
                             title="Editar">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
@@ -90,6 +92,7 @@ onMounted(() => {
                             </svg>
                         </button>
                     </div>
+                    <span v-else class="text-xs opacity-50 italic">Solo lectura</span>
                 </td>
             </tr>
         </DataTable>
