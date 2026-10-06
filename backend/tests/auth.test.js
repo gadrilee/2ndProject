@@ -57,4 +57,36 @@ describe("State Transitions: Password Reset", () => {
         expect(mockUser.name).toBe("Gabriel Sandoval");
    })
 
+   test("2. Me olvide mi contraseña debe realizar  la transiccion y generar un token ", async () => {
+        User.findOne.mockResolvedValue(mockUser);
+        mockReq.body.email = "gabriel@example.com";
+
+        await authController.forgotPassword(mockReq, mockRes);
+
+        expect(mockUser.update).toHaveBeenCalled();
+        expect(mockUser.resetToken).not.toBeNull();
+        expect(mockUser.resetTokenExpires).not.toBeNull();
+        expect(mockRes.json).toHaveBeenCalledWith(
+           expect.objectContaining({
+                message : "Token de recuperacion generado exitosamente"
+           }) 
+        );
+
+   })
+
+   test("3. Resetear la contraseña debe rechazar una transicion si el token no es valido", async () => {
+        User.findOne.mockResolvedValue(null);
+        mockReq.body = {
+            resetToken: "invalidToken",
+            newPassword: "newPassword123"
+        };
+
+        await expect(authController.resetPassword(mockReq, mockRes)).rejects.toThrow(HttpError);
+        await expect(authController.resetPassword(mockReq, mockRes)).rejects.toThrow("El token de restablecimiento es invalido o ha caducado");
+
+        
+   });
+
+
+
 });
