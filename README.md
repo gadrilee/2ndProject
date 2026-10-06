@@ -39,6 +39,6 @@ backend/src/
 ## Instrucciones para ejecutar el frontend
 ```bash
 cd frontend
-npx serve -l 5000
+npm run dev
 ```
-| Abre en el navegador `http://localhost:5000`.
+| Abre en el navegador `http://localhost:5173`.

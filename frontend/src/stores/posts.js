@@ -1,0 +1,107 @@
+import { defineStore } from "pinia";
+import { ref } from "vue";
+import { useAuthStore } from "@/stores/auth";
+
+const API_URL = import.meta.env.VITE_API_URL;
+
+export const usePostsStore = defineStore("posts", () => {
+    const posts = ref([]);
+    const loading = ref(false);
+    const error = ref(null);
+
+    const auth = useAuthStore();
+
+    function getHeaders() {
+        return {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.token}`,
+        };
+    }
+
+    async function fetchPosts() {
+        loading.value = true;
+        error.value = null;
+        try {
+            const res = await fetch(`${API_URL}/posts`, {
+                headers: getHeaders(),
+            });
+            const data = await res.json();
+            if (!res.ok) {
+                throw new Error(
+                    data.message || "Error al cargar publicaciones",
+                );
+            }
+            posts.value = data.posts || [];
+        } catch (err) {
+            error.value = err.message;
+            throw err;
+        } finally {
+            loading.value = false;
+        }
+    }
+
+    async function createPost(postData) {
+        const res = await fetch(`${API_URL}/posts`, {
+            method: "POST",
+            headers: getHeaders(),
+            body: JSON.stringify(postData),
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+            throw new Error(
+                data.message || "Error al registrar la publicación",
+            );
+        }
+
+        if (data.post) {
+            posts.value.unshift(data.post);
+        }
+        return data;
+    }
+
+    async function updatePost(id, postData) {
+        const res = await fetch(`${API_URL}/posts/${id}`, {
+            method: "PUT",
+            headers: getHeaders(),
+            body: JSON.stringify(postData),
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+            throw new Error(
+                data.message || "Error al actualizar la publicación",
+            );
+        }
+
+        const index = posts.value.findIndex((p) => p.id === id);
+        if (index !== -1 && data.post) {
+            posts.value[index] = data.post;
+        }
+        return data;
+    }
+
+    async function deletePost(id) {
+        const res = await fetch(`${API_URL}/posts/${id}`, {
+            method: "DELETE",
+            headers: getHeaders(),
+        });
+
+        if (!res.ok) {
+            const data = await res.json().catch(() => ({}));
+            throw new Error(data.message || "Error al eliminar la publicación");
+        }
+
+        posts.value = posts.value.filter((p) => p.id !== id);
+    }
+
+    return {
+        posts,
+        loading,
+        error,
+        fetchPosts,
+        createPost,
+        updatePost,
+        deletePost,
+    };
+});
