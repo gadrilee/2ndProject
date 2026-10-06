@@ -20,6 +20,12 @@ Segundo Proyecto de IHC
    npm run dev
    ```
 
+3. Para ejecutar las pruebas unitarias:
+   ```bash
+   npm run test
+   npm run test:coverage # Para ver el reporte de cobertura
+   ```
+
 El cliente REST para hacer las peticiones al backend está en `backend/api.http`
 
 ### Estructura del backend
