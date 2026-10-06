@@ -16,7 +16,7 @@ app.use(errorHandler);
 
 async function start() {
     try {
-        await sequelize.sync({ force: true });
+        await sequelize.sync();
         console.log("Base de datos SQLite sincronizada exitosamente");
         app.listen(port, () => {
             console.log(`Servidor activo en: http://localhost:${port}`);
