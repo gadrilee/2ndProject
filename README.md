@@ -1,6 +1,9 @@
 # Trueque U
 Segundo Proyecto de IHC
 
+**Integrantes:**
+* Justiniano Becerra Ruben Orestes 
+* Mamani Sandoval Gabriel
 
 
 ## Instrucciones para ejecutar el backend

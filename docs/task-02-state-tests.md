@@ -1,6 +1,6 @@
 # Documentación de Pruebas de Transición de Estado (Task 02)
 
-En esta tarea se han implementado pruebas unitarias para validar las transiciones de estado dentro del flujo de recuperación de contraseñas 
+En esta tarea se han implementado pruebas unitarias para validar las transiciones de estado dentro del flujo de [recuperación de contraseñas](/backend/tests/auth.test.js)
 
 ## Framework y Mocks Utilizados
 - Framework Principal: Jest
