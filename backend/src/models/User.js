@@ -37,6 +37,10 @@ User.init(
             type: DataTypes.STRING, 
             allowNull: true 
         },
+            resetTokenExpires: {
+            type: DataTypes.DATE,
+            allowNull: true,
+        },
     },
     { 
         sequelize, 
