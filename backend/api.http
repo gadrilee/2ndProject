@@ -120,5 +120,12 @@ Content-Type: application/json
 
 ###
 
-### 13. Obtener todas las publicaciones
+### 13. Obtener publicaciones del usuario autenticado
 GET {{baseUrl}}/posts
+Authorization: Bearer {{authToken}}
+
+###
+
+### 14. Eliminar una publicación (requiere token de su dueño)
+DELETE {{baseUrl}}/posts/{{createPost.response.body.post.id}}
+Authorization: Bearer {{authToken}}

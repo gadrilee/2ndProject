@@ -1,8 +1,11 @@
 const { Post, User } = require("../models");
 const { HttpError } = require("../middleware/errorHandler");
 
-exports.list = async (_req, res) => {
-    const posts = await Post.findAll({ order: [["publishedAt", "DESC"]] });
+exports.list = async (req, res) => {
+    const posts = await Post.findAll({
+        where: {userId: req.user.id},
+        order: [["publishedAt", "DESC"]],
+    });
     res.json({ posts });
 };
 
@@ -51,3 +54,22 @@ exports.update = async (req, res) => {
         post,
     });
 };
+
+exports.delete = async (req, res) => {
+    const post = await Post.findByPk(req.params.id);
+
+    if (!post) {
+        throw new HttpError(404, "Publicación no encontrada.");
+    }
+
+    if (post.userId !== req.user.id) {
+        throw new HttpError(403, "No puedes eliminar una publicación ajena");
+    }
+
+    await post.destroy();
+
+    res.json({
+        message: "Publicación eliminada satisfactoriamente",
+    });
+};
+
