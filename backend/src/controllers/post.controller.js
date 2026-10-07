@@ -41,6 +41,10 @@ exports.update = async (req, res) => {
         throw new HttpError(403, "No puedes editar una publicación ajena.");
     }
 
+    if (post.state === "reservado") {
+        throw new HttpError(403, "No puedes editar una publicación reservada");
+    }
+
     const { title, type, state } = req.body;
 
     if (!title || !type || !state) {
@@ -64,6 +68,10 @@ exports.delete = async (req, res) => {
 
     if (post.userId !== req.user.id) {
         throw new HttpError(403, "No puedes eliminar una publicación ajena");
+    }
+
+    if (post.state === "reservado") {
+        throw new HttpError(403, "No puedes eliminar una publicación reservada.");
     }
 
     await post.destroy();
