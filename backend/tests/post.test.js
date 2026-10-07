@@ -35,7 +35,8 @@ describe("Restricciones de estado en publicaciones", () => {
             json : jest.fn(),
             status: jest.fn().mockReturnThis()
         };
-        Post.findByPk().mockClear(); 
+
+        Post.findByPk.mockClear(); 
     });
 
     test("1. deberia permitir editar si el estado no esta reservado", async () =>{
@@ -51,6 +52,47 @@ describe("Restricciones de estado en publicaciones", () => {
 
         expect(mockPost.update).toHaveBeenCalledWith(mockReq.body);
         expect(mockRes.json).toHaveBeenCalled();
-    })
+    });
 
-})
+    test("2.  Deberia permitir Eliminar si el estado es diferente a reservado", async() =>{
+        Post.findByPk.mockResolvedValue(mockPost);
+
+        await postController.delete(mockReq, mockRes);
+
+        expect(mockPost.destroy).toHaveBeenCalled();
+        expect(mockRes.json).toHaveBeenCalledWith(
+            expect.objectContaining({
+                message: "Publicación eliminada satisfactoriamente"
+            })
+        )
+    });
+
+    test("3. Restriccion, Deberia rechazar la edicion si el estado es reservado", async() =>{
+        mockPost.state = "reservado";
+        Post.findByPk.mockResolvedValue(mockPost);
+
+        mockReq.body = {
+            title : "Intentar editar ilegalemnte",
+            type: "Cambiar tipo ilegalemnte",
+            state : "disponible"
+        };
+
+        await expect(postController.update(mockReq, mockRes)).rejects.toThrow(HttpError)
+        await expect(postController.update(mockReq, mockRes)).rejects.toThrow("No puedes editar una publicación reservada");
+
+        expect(mockPost.update).not.toHaveBeenCalled();
+    });
+
+    test("4. restriccion, deberia  rechazar la eliminacion si el estado es reservado", async () => {
+    mockPost.state = "reservado";
+    Post.findByPk.mockResolvedValue(mockPost);
+
+    await expect(postController.delete(mockReq, mockRes)).rejects.toThrow(HttpError);
+    await expect(postController.delete(mockReq, mockRes)).rejects.toThrow("No puedes eliminar una publicación reservada");
+
+    expect(mockPost.destroy).not.toHaveBeenCalled();
+    
+    });
+
+});
+
