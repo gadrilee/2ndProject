@@ -9,8 +9,8 @@ POST {{baseUrl}}/register
 Content-Type: application/json
 
 {
-  "name": "Diego Estero",
-  "email": "estero@truequeu.com",
+  "name": "Aaron Estero",
+  "email": "aaron@truequeu.com",
   "password": "Password123!"
 }
 
@@ -128,4 +128,37 @@ Authorization: Bearer {{authToken}}
 
 ### 14. Eliminar una publicación (requiere token de su dueño)
 DELETE {{baseUrl}}/posts/{{createPost.response.body.post.id}}
+Authorization: Bearer {{authToken}}
+
+###
+
+### 15. Crear publicación en estado "reservado" para probar restricciones
+# @name createReservedPost
+POST {{baseUrl}}/posts
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "title": "Calculadora Científica",
+  "type": "Electronico",
+  "state": "reservado"
+}
+
+###
+
+### 16.intentar editar la publicación reserva
+PUT {{baseUrl}}/posts/{{createReservedPost.response.body.post.id}}
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "title": "Calculadora Científica (Editada)",
+  "type": "Electronico",
+  "state": "disponible"
+}
+
+###
+
+### 17. intentar eliminar la publicación reservada
+DELETE {{baseUrl}}/posts/{{createReservedPost.response.body.post.id}}
 Authorization: Bearer {{authToken}}
