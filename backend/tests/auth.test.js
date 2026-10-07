@@ -5,7 +5,6 @@ const {HttpError} = require("../src/middleware/errorHandler");
 
 
 jest.mock("bcryptjs");
-jest.mock("jsonwebtoken");
 jest.mock("../src/models", () => ({
     User: {
         findOne: jest.fn()
