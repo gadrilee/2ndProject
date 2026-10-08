@@ -75,7 +75,7 @@ async function handleSubmit() {
                 <label class="label"><span class="label-text font-medium">Estado</span></label>
                 <select v-model="form.state" class="select select-bordered w-full focus:select-primary" required>
                     <option value="disponible">Disponible</option>
-                    <option value="reservado">Reservado</option>
+                    <!-- <option value="reservado">Reservado</option> -->
                     <option value="intercambiado">Intercambiado</option>
                 </select>
             </div>

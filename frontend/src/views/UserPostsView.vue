@@ -36,6 +36,14 @@ async function handleDelete(id) {
     }
 }
 
+async function handleToggleReservation(id) {
+    try {
+        await postsStore.toggleReservation(id);
+    } catch (err) {
+        alert(err.message);
+    }
+}
+
 onMounted(() => {
     postsStore.fetchPosts();
 });
@@ -44,7 +52,7 @@ onMounted(() => {
 <template>
     <div class="mx-auto max-w-6xl p-6">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-            <PageTitle title="Mis publicaciones" subtitle="Gestión de artículos para hacer trueque." />
+            <PageTitle title="Mis publicaciones" subtitle="Gestión de artículos para hacer trueque" />
             <button @click="openCreateModal" class="btn btn-primary shadow-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
@@ -74,25 +82,64 @@ onMounted(() => {
                     <StateBadge :state="post.state" />
                 </td>
                 <td class="text-center">
-                    <div v-if="!post.userId || post.userId === authStore.user?.id" class="inline-flex gap-2">
-                        <button @click="openEditModal(post)" class="btn btn-square btn-ghost btn-sm text-info"
-                            title="Editar">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
-                        </button>
-                        <button @click="handleDelete(post.id)" class="btn btn-square btn-ghost btn-sm text-error"
-                            title="Eliminar">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                        </button>
+                    <div v-if="!post.userId || post.userId === authStore.user?.id"
+                        class="flex flex-col items-center gap-1">
+                        <div class="inline-flex items-center gap-1">
+
+                            <button v-if="post.state !== 'intercambiado'" @click="handleToggleReservation(post.id)"
+                                class="btn btn-square btn-ghost btn-sm"
+                                :class="post.state === 'reservado' ? 'text-warning' : 'text-success'"
+                                :title="post.state === 'reservado' ? 'Liberar reserva' : 'Reservar'">
+
+                                <svg v-if="post.state === 'reservado'" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M13.5 10.5V6.75a4.5 4.5 0 1 1 9 0v3.75M3.75 21.75h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H3.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                                </svg>
+
+                                <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                                </svg>
+                            </button>
+
+                            <div class="tooltip tooltip-left"
+                                :data-tip="post.state === 'reservado' ? 'Publicación reservada, no se puede editar' : 'Editar'">
+                                <button @click="openEditModal(post)" :disabled="post.state === 'reservado'"
+                                    class="btn btn-square btn-ghost btn-sm text-info disabled:opacity-30"
+                                    aria-label="Editar">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <div class="tooltip tooltip-left"
+                                :data-tip="post.state === 'reservado' ? 'Publicación reservada, no se puede eliminar' : 'Eliminar'">
+                                <button @click="handleDelete(post.id)" :disabled="post.state === 'reservado'"
+                                    class="btn btn-square btn-ghost btn-sm text-error disabled:opacity-30"
+                                    aria-label="Eliminar">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                    </svg>
+                                </button>
+                            </div>
+
+                        </div>
+
+                        <span v-if="post.state === 'reservado'" class="text-xs text-warning font-medium">
+                            {{ 'Reservado, no se puede modificar' }}
+                        </span>
                     </div>
-                    <span v-else class="text-xs opacity-50 italic">Solo lectura</span>
+
+                    <span v-else class="text-xs opacity-50 italic">
+                        Solo lectura
+                    </span>
                 </td>
             </tr>
         </DataTable>
