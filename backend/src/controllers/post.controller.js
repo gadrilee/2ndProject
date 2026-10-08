@@ -3,7 +3,7 @@ const { HttpError } = require("../middleware/errorHandler");
 
 exports.list = async (req, res) => {
     const posts = await Post.findAll({
-        where: {userId: req.user.id},
+        where: { userId: req.user.id },
         order: [["publishedAt", "DESC"]],
     });
     res.json({ posts });
@@ -71,7 +71,10 @@ exports.delete = async (req, res) => {
     }
 
     if (post.state === "reservado") {
-        throw new HttpError(403, "No puedes eliminar una publicación reservada.");
+        throw new HttpError(
+            403,
+            "No puedes eliminar una publicación reservada.",
+        );
     }
 
     await post.destroy();
@@ -81,3 +84,31 @@ exports.delete = async (req, res) => {
     });
 };
 
+exports.toggleReservation = async (req, res) => {
+    const post = await Post.findByPk(req.params.id);
+
+    if (!post) {
+        throw new HttpError(404, "Publicación no encontrada.");
+    }
+
+    if (post.userId !== req.user.id) {
+        throw new HttpError(403, "No puedes editar una publicación ajena.");
+    }
+
+    if (post.state === "intercambiado") {
+        throw new HttpError(
+            400,
+            "No puedes reservar una publicación intercambiada",
+        );
+    }
+
+    const state = post.state === "reservado" ? "disponible" : "reservado";
+    await post.update({ state });
+
+    res.json({
+        message: state === "reservado"
+            ? "Publicación reservada."
+            : "Reserva liberada",
+        post,
+    });
+};
