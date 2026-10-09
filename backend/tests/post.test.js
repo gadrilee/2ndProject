@@ -109,4 +109,27 @@ describe("Restricciones de estado en publicaciones", () => {
         await postController.toggleReservation(mockReq, mockRes);
         expect(mockPost.update).toHaveBeenCalledWith({ state: "disponible" });
     });
+
+    test("6. deberia completar el intercambio si el estado es reservado", async () => {
+        mockPost.state = "reservado";
+        Post.findByPk.mockResolvedValue(mockPost);
+
+        await postController.complete(mockReq, mockRes);
+
+        expect(mockPost.update).toHaveBeenCalledWith({ state: "intercambiado" });
+        expect(mockPost.title).toBe("Libro de Estructura de Datos");
+        expect(mockPost.type).toBe("Material Universitario");
+        expect(mockRes.json).toHaveBeenCalled();
+    });
+
+    test("7. restriccion, deberia rechazar completar si el estado es disponible", async () => {
+        Post.findByPk.mockResolvedValue(mockPost);
+
+        await expect(postController.complete(mockReq, mockRes)).rejects.toThrow(
+            "Solo puedes completar una publicación reservada.",
+        );
+
+        expect(mockPost.update).not.toHaveBeenCalled();
+    });
+
 });
