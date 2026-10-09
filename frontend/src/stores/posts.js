@@ -123,6 +123,28 @@ export const usePostsStore = defineStore("posts", () => {
         return data;
     }
 
+    async function completeExchange(id) {
+        const res = await fetch(`${API_URL}/posts/${id}/complete`, {
+            method: "PATCH",
+            headers: getHeaders(),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            throw new Error(
+                data.message || data.error ||
+                    "Error al completar el intercambio",
+            );
+        }
+        const index = posts.value.findIndex((p) => p.id === id);
+
+        if (index !== -1 && data.post) {
+            posts.value[index] = data.post;
+        }
+        return data;
+    }
+
     return {
         posts,
         loading,
@@ -131,6 +153,7 @@ export const usePostsStore = defineStore("posts", () => {
         createPost,
         updatePost,
         deletePost,
-        toggleReservation
+        toggleReservation,
+        completeExchange,
     };
 });

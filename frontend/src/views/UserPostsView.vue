@@ -44,6 +44,15 @@ async function handleToggleReservation(id) {
     }
 }
 
+async function handleComplete(id) {
+    if (!confirm("¿Deseas marcar este intercambio como completado?")) return;
+    try {
+        await postsStore.completeExchange(id);
+    } catch (err) {
+        alert(err.message);
+    }
+}
+
 onMounted(() => {
     postsStore.fetchPosts();
 });
@@ -104,9 +113,19 @@ onMounted(() => {
                                 </svg>
                             </button>
 
+                            <button v-if="post.state === 'reservado'" @click="handleComplete(post.id)"
+                                class="btn btn-square btn-ghost btn-sm text-success" title="Completar intercambio"
+                                aria-label="Completar intercambio">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                                </svg>
+                            </button>
+
                             <div class="tooltip tooltip-left"
-                                :data-tip="post.state === 'reservado' ? 'Publicación reservada, no se puede editar' : 'Editar'">
-                                <button @click="openEditModal(post)" :disabled="post.state === 'reservado'"
+                                :data-tip="post.state === 'reservado' ? 'Publicación reservada, no se puede editar' : post.state === 'intercambiado' ? 'Publicación intercambiada, no se puede editar' : 'Editar'">
+                                <button @click="openEditModal(post)"
+                                    :disabled="post.state === 'reservado' || post.state === 'intercambiado'"
                                     class="btn btn-square btn-ghost btn-sm text-info disabled:opacity-30"
                                     aria-label="Editar">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -118,8 +137,9 @@ onMounted(() => {
                             </div>
 
                             <div class="tooltip tooltip-left"
-                                :data-tip="post.state === 'reservado' ? 'Publicación reservada, no se puede eliminar' : 'Eliminar'">
-                                <button @click="handleDelete(post.id)" :disabled="post.state === 'reservado'"
+                                :data-tip="post.state === 'reservado' ? 'Publicación reservada, no se puede eliminar' : post.state === 'intercambiado' ? 'Publicación intercambiada, no se puede eliminar' : 'Eliminar'">
+                                <button @click="handleDelete(post.id)"
+                                    :disabled="post.state === 'reservado' || post.state === 'intercambiado'"
                                     class="btn btn-square btn-ghost btn-sm text-error disabled:opacity-30"
                                     aria-label="Eliminar">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -134,6 +154,9 @@ onMounted(() => {
 
                         <span v-if="post.state === 'reservado'" class="text-xs text-warning font-medium">
                             {{ 'Reservado, no se puede modificar' }}
+                        </span>
+                        <span v-if="post.state === 'intercambiado'" class="text-xs opacity-60 font-medium">
+                            Intercambiado, no se puede modificar
                         </span>
                     </div>
 
