@@ -45,6 +45,13 @@ exports.update = async (req, res) => {
         throw new HttpError(403, "No puedes editar una publicación reservada");
     }
 
+    if (post.state === "intercambiado") {
+        throw new HttpError(
+            403,
+            "No puedes editar una publicación intercambiada.",
+        );
+    }
+
     const { title, type, state } = req.body;
 
     if (!title || !type || !state) {
@@ -74,6 +81,13 @@ exports.delete = async (req, res) => {
         throw new HttpError(
             403,
             "No puedes eliminar una publicación reservada.",
+        );
+    }
+
+    if (post.state === "intercambiado") {
+        throw new HttpError(
+            403,
+            "No puedes eliminar una publicación intercambiada.",
         );
     }
 
@@ -109,6 +123,32 @@ exports.toggleReservation = async (req, res) => {
         message: state === "reservado"
             ? "Publicación reservada."
             : "Reserva liberada",
+        post,
+    });
+};
+
+exports.complete = async (req, res) => {
+    const post = await Post.findByPk(req.params.id);
+
+    if (!post) {
+        throw new HttpError(404, "Publicación no encontrada.");
+    }
+
+    if (post.userId !== req.user.id) {
+        throw new HttpError(403, "No puedes editar una publicación ajena.");
+    }
+
+    if (post.state !== "reservado") {
+        throw new HttpError(
+            400,
+            "Solo puedes completar una publicación reservada.",
+        );
+    }
+
+    await post.update({ state: "intercambiado" });
+
+    res.json({
+        message: "Intercambio completado.",
         post,
     });
 };

@@ -162,3 +162,9 @@ Authorization: Bearer {{authToken}}
 ### 17. intentar eliminar la publicación reservada
 DELETE {{baseUrl}}/posts/{{createReservedPost.response.body.post.id}}
 Authorization: Bearer {{authToken}}
+
+###
+
+### 18. Completar el intercambio de la publicación reservada
+PATCH {{baseUrl}}/posts/{{createReservedPost.response.body.post.id}}/complete
+Authorization: Bearer {{authToken}}
